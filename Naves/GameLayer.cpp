@@ -116,6 +116,15 @@ void GameLayer::keysToControls(SDL_Event event) {
 }
 
 void GameLayer::update() {
+	// Generar enemigos
+	newEnemyTime--;
+	if (newEnemyTime <= 0) {
+		int rX = (rand() % (600 - 500)) + 1 + 500;
+		int rY = (rand() % (300 - 60)) + 1 + 60;
+		enemies.push_back(new Enemy(rX, rY, game));
+		newEnemyTime = std::min(200-killedEnemys,50); //Cada vez que se mata un enemigo, estos aparecen antes
+	}
+
 	player->update();
 	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
 		enemy->update();
@@ -136,7 +145,7 @@ void GameLayer::update() {
 
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
-			if (enemy->isOverlap(projectile)) {
+			if (enemy->isOverlap(projectile)) { //Si le da un proyectil o se sale de la pantalla
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end(); //comprobar si el proyectil ya estaba en la lista
@@ -153,6 +162,26 @@ void GameLayer::update() {
 					deleteEnemies.push_back(enemy);
 				}
 
+			}
+			if (enemy->x + enemy->width / 2 <= 0) { //si el enemigo se sale de la pantalla
+				bool eInList = std::find(deleteEnemies.begin(),
+					deleteEnemies.end(),
+					enemy) != deleteEnemies.end(); //comprobar si el enemigo ya estaba en la lista
+
+				if (!eInList) {
+					deleteEnemies.push_back(enemy);
+				}
+
+			}
+
+			if (projectile->x - projectile->width / 2 >= WIDTH) { //si el proyectil se sale de la pantalla
+				bool pInList = std::find(deleteProjectiles.begin(),
+					deleteProjectiles.end(),
+					projectile) != deleteProjectiles.end(); //comprobar si el proyectil ya estaba en la lista
+
+				if (!pInList) {
+					deleteProjectiles.push_back(projectile);
+				}
 			}
 		}
 	}
