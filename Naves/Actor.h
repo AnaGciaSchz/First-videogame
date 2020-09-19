@@ -6,6 +6,7 @@ class Actor
 public:
 	Actor(string filename, float x, float y, int width, int height, Game* game); //game es quien lo pinta
 	virtual void draw();
+	bool isOverlap(Actor* actor);
 
 	SDL_Texture* texture; //cosas de SDL, no importante
 	int x; //pos, como no se inicializa, su valor es aleatorio (lo que haya en ese momento en memoria

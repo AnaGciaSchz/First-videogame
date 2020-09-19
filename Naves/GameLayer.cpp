@@ -120,6 +120,13 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
 		enemy->update();
 	}
+	// Colisiones
+	for (auto const& enemy : enemies) {
+		if (player->isOverlap(enemy)) {
+			init();
+			return; // Cortar el for
+		}
+	}
 
 	for (auto const& projectile : projectiles) {
 		projectile->update();

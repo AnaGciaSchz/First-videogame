@@ -31,3 +31,16 @@ void Actor::draw() {
 	SDL_RenderCopyEx(game->renderer, texture, &source, &destination, 0, NULL, SDL_FLIP_NONE); //referencias porque están en el stack, 0 es que no queremos ningún ángulo, null porque no queremos más punteros
 		//null pointer es null de tipo pointer
 }
+
+bool Actor::isOverlap(Actor* actor) {
+	bool overlap = false;
+	if (actor->x - actor->width / 2 <= x + width / 2
+		&& actor->x + actor->width / 2 >= x - width / 2
+		&& actor->y + actor->height / 2 >= y - height / 2
+		&& actor->y - actor->height / 2 <= y + height / 2) {
+
+		overlap = true;
+	}
+	return overlap;
+}
+
