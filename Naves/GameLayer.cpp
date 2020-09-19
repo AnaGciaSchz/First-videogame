@@ -120,13 +120,55 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
 		enemy->update();
 	}
-	// Colisiones
+	// Colisiones, Player - Enemy
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
 			init();
 			return; // Cortar el for
 		}
 	}
+
+	// Colisiones , Enemy - Projectile
+
+	//Listas temporales para anotar qué queremos eliminar (y no borrar de las listas mientras las recorremos)
+	list<Enemy*> deleteEnemies;
+	list<Projectile*> deleteProjectiles;
+
+	for (auto const& enemy : enemies) {
+		for (auto const& projectile : projectiles) {
+			if (enemy->isOverlap(projectile)) {
+				bool pInList = std::find(deleteProjectiles.begin(),
+					deleteProjectiles.end(),
+					projectile) != deleteProjectiles.end(); //comprobar si el proyectil ya estaba en la lista
+
+				if (!pInList) {
+					deleteProjectiles.push_back(projectile);
+				}
+
+				bool eInList = std::find(deleteEnemies.begin(),
+					deleteEnemies.end(),
+					enemy) != deleteEnemies.end(); //comprobar si el enemigo ya estaba en la lista
+
+				if (!eInList) {
+					deleteEnemies.push_back(enemy);
+				}
+
+			}
+		}
+	}
+
+	//Eliminamos los enemigos y proyectiles que han colisionado
+	for (auto const& delEnemy : deleteEnemies) {
+		enemies.remove(delEnemy);
+	}
+	deleteEnemies.clear();
+
+	for (auto const& delProjectile : deleteProjectiles) {
+		projectiles.remove(delProjectile);
+	}
+	deleteProjectiles.clear();
+
+
 
 	for (auto const& projectile : projectiles) {
 		projectile->update();
