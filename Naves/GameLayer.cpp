@@ -60,10 +60,16 @@ void GameLayer::processControls() {
 //levanta para cambiar valores y que no parezca que
 //está siempre pulsada
 void GameLayer::keysToControls(SDL_Event event) {
+	if (event.type == SDL_QUIT) {
+		game->loopActive = false;
+	}
 	if (event.type == SDL_KEYDOWN) {
 		int code = event.key.keysym.sym;
 		// Pulsada
 		switch (code) {
+		case SDLK_ESCAPE: //Salir del juego
+			game->loopActive = false;
+			break;
 		case SDLK_d: // derecha
 			controlMoveX = 1;
 			break;
