@@ -70,6 +70,9 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_ESCAPE: //Salir del juego
 			game->loopActive = false;
 			break;
+		case SDLK_1: //Poner en pantalla completa
+			game->scale();
+			break;
 		case SDLK_d: // derecha
 			controlMoveX = 1;
 			break;
