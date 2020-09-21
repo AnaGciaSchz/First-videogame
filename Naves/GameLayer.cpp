@@ -10,6 +10,7 @@ void GameLayer::init() {
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
+	recolectables.clear(); // Vaciar por si reiniciamos el juego
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	enemies.push_back(new Enemy(300, 50, game));
@@ -134,10 +135,24 @@ void GameLayer::update() {
 		newEnemyTime = std::min(200-killedEnemys,50); //Cada vez que se mata un enemigo, estos aparecen antes
 	}
 
+	//Generar recolectables
+	recolectableTime--;
+	if (recolectableTime <= 0) {
+		int rX = (rand() % (600 - 500)) + 1 + 500;
+		int rY = (rand() % (300 - 60)) + 1 + 60;
+		recolectables.push_back(new Recolectable(rX, rY, game));
+		recolectableTime = 110;
+	}
+
 	player->update();
 	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
 		enemy->update();
 	}
+
+	for (auto const& recolectable : recolectables) { //auto es como var o dynamic, infiere tipo
+		recolectable->update();
+	}
+
 	// Colisiones, Player - Enemy
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
@@ -146,8 +161,38 @@ void GameLayer::update() {
 		}
 	}
 
-	// Colisiones , Enemy - Projectile
+	// Colisiones, Player - Recolectable
+	list<Recolectable*> deleteRecolectable;
+	for (auto const& recolectable : recolectables) {
+		if (player->isOverlap(recolectable)) {
+			bool rInList = std::find(deleteRecolectable.begin(),
+				deleteRecolectable.end(),
+				recolectable) != deleteRecolectable.end(); //comprobar si el recolectable ya estaba en la lista
+			if (!rInList) {
+				deleteRecolectable.push_back(recolectable);
+			}
+		}
+		//Recolectables que se han salido de la pantalla
+		if (recolectable->x <= 0) { //si el recolectable se sale de la pantalla
+			bool rInList = std::find(deleteRecolectable.begin(),
+				deleteRecolectable.end(),
+				recolectable) != deleteRecolectable.end(); //comprobar si el recolectable ya estaba en la lista
 
+			if (!rInList) {
+				deleteRecolectable.push_back(recolectable);
+			}
+
+		}
+	}//for
+
+	//Eliminamos los recolectables que han sido cogidos o saldos de la pantalla
+	for (auto const& delRecolectable: deleteRecolectable) {
+		recolectables.remove(delRecolectable);
+	}
+	deleteRecolectable.clear();
+
+
+	// Colisiones , Enemy - Projectile
 	//Listas temporales para anotar qué queremos eliminar (y no borrar de las listas mientras las recorremos)
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
@@ -224,6 +269,10 @@ void GameLayer::draw() {
 
 	for (auto const& enemy : enemies) {
 		enemy->draw();
+	}
+
+	for (auto const& recolectable : recolectables) {
+		recolectable->draw();
 	}
 
 
