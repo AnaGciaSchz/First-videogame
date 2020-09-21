@@ -208,7 +208,7 @@ void GameLayer::update() {
 					projectile) != deleteProjectiles.end(); //comprobar si el proyectil ya estaba en la lista
 
 				if (!pInList) {
-					deleteProjectiles.push_back(projectile);
+						deleteProjectiles.push_back(projectile);
 				}
 
 				bool eInList = std::find(deleteEnemies.begin(),
@@ -216,7 +216,12 @@ void GameLayer::update() {
 					enemy) != deleteEnemies.end(); //comprobar si el enemigo ya estaba en la lista
 
 				if (!eInList) {
-					deleteEnemies.push_back(enemy);
+					if (enemy->vida - 1 == 0) {
+						deleteEnemies.push_back(enemy);
+					}
+					else {
+						enemy->vida = enemy->vida - 1;
+					}
 				}
 
 			}
