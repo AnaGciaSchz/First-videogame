@@ -7,8 +7,18 @@ void Player::update() {
 	if (shootTime > 0) {
 		shootTime--;
 	}
-	x = x + vx;
-	y = y + vy;
+
+	int xResult = x + vx;
+
+	if (xResult - width / 2 > 0 && xResult + width / 2 < WIDTH) {
+		x = xResult;
+	}
+
+	int yResult = y + vy;
+
+	if (yResult - height / 2 > 0 && yResult + height / 2 < HEIGHT) {
+		y = yResult;
+	}
 }
 
 void Player::moveX(float axis) {
