@@ -11,6 +11,7 @@ void GameLayer::init() {
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
 	recolectables.clear(); // Vaciar por si reiniciamos el juego
+	disparos = 10; //Restaurar por si reiniciamos el juego
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	enemies.push_back(new Enemy(300, 50, game));
@@ -27,9 +28,10 @@ void GameLayer::processControls() {
 	}
 	//procesar controles
 	// Disparar
-	if (controlShoot) {
+	if (controlShoot && disparos !=0) {
 		Projectile* newProjectile = player->shoot();
 		if (newProjectile != NULL) {
+			disparos--;
 			projectiles.push_back(newProjectile);
 		}
 	}
@@ -169,6 +171,7 @@ void GameLayer::update() {
 				deleteRecolectable.end(),
 				recolectable) != deleteRecolectable.end(); //comprobar si el recolectable ya estaba en la lista
 			if (!rInList) {
+				disparos++;
 				deleteRecolectable.push_back(recolectable);
 			}
 		}
