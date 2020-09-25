@@ -12,7 +12,7 @@ void GameLayer::init() {
 	textPoints->content = to_string(points);
 
 	player = new Player(50,50,game); // new = se crea en el heap y no se borra
-	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5,-1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game); //Va a estar en el 85% de la x y el 5% de y
 
@@ -133,6 +133,7 @@ void GameLayer::keysToControls(SDL_Event event) {
 }
 
 void GameLayer::update() {
+	background->update();
 	// Generar enemigos
 	newEnemyTime--;
 	if (newEnemyTime <= 0) {
@@ -203,6 +204,21 @@ void GameLayer::update() {
 				}
 			}
 		}
+
+
+		for (auto const& projectile : projectiles) {
+			if (projectile->isInRender() == false) {
+
+				bool pInList = std::find(deleteProjectiles.begin(),
+					deleteProjectiles.end(),
+					projectile) != deleteProjectiles.end();
+
+				if (!pInList) {
+					deleteProjectiles.push_back(projectile);
+				}
+			}
+		}
+
 	}
 
 	//Eliminamos los enemigos y proyectiles que han colisionado

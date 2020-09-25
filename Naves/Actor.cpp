@@ -15,6 +15,11 @@ Actor::Actor(string filename, float x, float y, int width, int height, Game* gam
 
 }
 
+Actor::~Actor() {
+	SDL_DestroyTexture(texture);
+}
+
+
 void Actor::draw() {
 	SDL_Rect source; //dimensiones imagen, no tiene new, se crea en el stack, no en el heap, se construye igualmente
 	source.x = 0;
@@ -43,4 +48,13 @@ bool Actor::isOverlap(Actor* actor) {
 	}
 	return overlap;
 }
+
+bool Actor::isInRender() {
+	if (x - width / 2 <= WIDTH && x + width / 2 >= 0 &&
+		y - height / 2 <= HEIGHT && y + height / 2 >= 0) {
+		return true;
+	}
+	return false;
+}
+
 

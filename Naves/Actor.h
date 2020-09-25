@@ -5,7 +5,9 @@ class Actor
 {
 public:
 	Actor(string filename, float x, float y, int width, int height, Game* game); //game es quien lo pinta
+	~Actor();
 	virtual void draw();
+	bool isInRender();
 	bool isOverlap(Actor* actor);
 
 	SDL_Texture* texture; //cosas de SDL, no importante
