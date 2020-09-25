@@ -8,7 +8,7 @@ Enemy::Enemy(float x, float y, Game* game)
 	vx = -1;
 
 	aMoving = new Animation("res/enemigo_movimiento.png", width, height,
-		108, 40, 6, 3, game);
+		108, 40, 6, 3,true, game);
 	animation = aMoving;
 
 }
