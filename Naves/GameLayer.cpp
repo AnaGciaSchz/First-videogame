@@ -6,8 +6,16 @@ GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
 
 void GameLayer::init() {
 	delete player; //antes de crear nuevo personaje, se borra anterior
+
+	points = 0;
+	textPoints = new Text("0", WIDTH * 0.92, HEIGHT * 0.04, game);
+	textPoints->content = to_string(points);
+
 	player = new Player(50,50,game); // new = se crea en el heap y no se borra
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundPoints = new Actor("res/icono_puntos.png",
+		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game); //Va a estar en el 85% de la x y el 5% de y
+
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
 
@@ -170,6 +178,8 @@ void GameLayer::update() {
 				if (!eInList) {
 					deleteEnemies.push_back(enemy);
 				}
+				points++;
+				textPoints->content = to_string(points);
 
 			}
 			if (enemy->x + enemy->width / 2 <= 0) { //si el enemigo se sale de la pantalla
@@ -225,7 +235,8 @@ void GameLayer::draw() {
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
-
+	textPoints->draw();
+	backgroundPoints->draw(); //Lo pintamos el último para que los enemigos no lo tapen tampoco
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }

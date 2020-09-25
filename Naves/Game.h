@@ -25,6 +25,7 @@ public:
 	float scaleLower = 1;
 	SDL_Window* window; // ventana
 	SDL_Renderer* renderer; // renderizador
+	TTF_Font* font;//Fuente para escribir, sirve cualquier fuente TTF, nos sirve porque ya tenemos el #include <SDL_ttf.h>)
 	bool loopActive; // Juego activo
 
 	Layer* gameLayer;

@@ -4,6 +4,7 @@
 #include "Background.h"
 #include "Enemy.h"
 #include "Projectile.h"
+#include "Text.h"
 
 #include <list>
 
@@ -17,8 +18,11 @@ public:
 	virtual void draw() override; //dibujar
 	void keysToControls(SDL_Event event);
 
+	Text* textPoints; //texto de los puntos
+	int points; //cuantos puntos tenemos
 	Player* player;
 	Background* background;
+	Actor* backgroundPoints; //Icono para los puntos
 	//Necesario inicializar aquí, no nos interesa que tenga otros valores de inicio
 	bool controlShoot = false; //para disparar
 	int controlMoveY = 0;
