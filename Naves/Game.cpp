@@ -38,6 +38,9 @@ void Game::scale() {
 		SDL_SetWindowSize(window, WIDTH * scaleLower, HEIGHT * scaleLower);
 		// Cambiar escala del render
 		SDL_RenderSetScale(renderer, scaleLower, scaleLower);
+
+		//Centra la ventana en la pantalla
+		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	}
 	else { // Escala Original
 		scaleLower = 1;
@@ -45,6 +48,9 @@ void Game::scale() {
 		SDL_SetWindowSize(window, WIDTH, HEIGHT);
 		// Cambiar escala del render
 		SDL_RenderSetScale(renderer, 1, 1);
+
+		//Centra la ventana en la pantalla
+		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	}
 
 }
