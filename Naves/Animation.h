@@ -12,8 +12,8 @@ public:
 	void draw(float x, float y);
 	int actorWidth; // Actor Width
 	int actorHeight; // Actor height
-	int fileWidth; // Sprite sheet width
-	int fileHeight; // Sprite sheet height
+	int fileWidth; // sprite sheet width
+	int fileHeight; // sprite sheet height
 	int currentFrame;
 	int totalFrames;
 	Game* game;
