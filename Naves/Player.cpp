@@ -2,6 +2,7 @@
 
 Player::Player(float x, float y, Game* game) :Actor("res/jugador.png",x,y,35,35,game){
 	orientation = game->orientationRight;
+	state = game->stateMoving;
 	aIdleRight = new Animation("res/jugador_idle_derecha.png", width, height,
 		320, 40, 6, 8,true, game);
 	aIdleLeft = new Animation("res/jugador_idle_izquierda.png", width, height,
@@ -10,11 +11,25 @@ Player::Player(float x, float y, Game* game) :Actor("res/jugador.png",x,y,35,35,
 		320, 40, 6, 8,true, game);
 	aRunningLeft = new Animation("res/jugador_corriendo_izquierda.png", width, height,
 		320, 40, 6, 8,true, game);
+	aShootingRight = new Animation("res/jugador_disparando_derecha.png",
+		width, height, 160, 40, 6, 4, false, game);
+	aShootingLeft = new Animation("res/jugador_disparando_izquierda.png",
+		width, height, 160, 40, 6, 4, false, game);
+
 	animation = aIdleRight;
 
 }
 void Player::update() {
-	animation->update();
+
+	bool endAnimation = animation->update();
+
+	// Acabo la animación, no sabemos cual
+	if (endAnimation) {
+		// Estaba disparando
+		if (state == game->stateShooting) {
+			state = game->stateMoving;
+		}
+	}
 
 	// Establecer orientación
 	if (vx > 0) {
@@ -24,24 +39,34 @@ void Player::update() {
 		orientation = game->orientationLeft;
 	}
 
-	// Selección de animación
-	if (vx != 0) {
+	// Selección de animación basada en estados
+	if (state == game->stateShooting) {
 		if (orientation == game->orientationRight) {
-			animation = aRunningRight;
+			animation = aShootingRight;
 		}
 		if (orientation == game->orientationLeft) {
-			animation = aRunningLeft;
+			animation = aShootingLeft;
+		}
+	}
+	if (state == game->stateMoving) {
+		if (vx != 0) {
+			if (orientation == game->orientationRight) {
+				animation = aRunningRight;
+			}
+			if (orientation == game->orientationLeft) {
+				animation = aRunningLeft;
+			}
+		}
+		if (vx == 0) {
+			if (orientation == game->orientationRight) {
+				animation = aIdleRight;
+			}
+			if (orientation == game->orientationLeft) {
+				animation = aIdleLeft;
+			}
 		}
 	}
 
-	if (vx == 0) {
-		if (orientation == game->orientationRight) {
-			animation = aIdleRight;
-		}
-		if (orientation == game->orientationLeft) {
-			animation = aIdleLeft;
-		}
-	}
 
 	if (shootTime > 0) {
 		shootTime--;
@@ -60,8 +85,15 @@ void Player::moveY(float axis) {
 
 Projectile* Player::shoot() {
 	if (shootTime == 0) {
+		state = game->stateShooting;
 		shootTime = shootCadence;
-		return new Projectile(x, y, game);
+		aShootingLeft->currentFrame = 0; //"Rebobinar" animación
+		aShootingRight->currentFrame = 0; //"Rebobinar" animación
+		Projectile* projectile = new Projectile(x, y, game);
+		if (orientation == game->orientationLeft) {
+			projectile->vx = projectile->vx * -1; // Invertir
+		}
+		return projectile;
 	}
 	else {
 		return NULL;

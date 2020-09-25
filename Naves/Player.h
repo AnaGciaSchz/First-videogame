@@ -14,6 +14,7 @@ public:
 	void moveY(float axis);
 	void draw() override; // Va a sobrescribir
 	int orientation;
+	int state;
 
 	Animation* aIdleLeft;
 	Animation* aRunningRight;
