@@ -24,6 +24,13 @@ void Player::update() {
 
 	bool endAnimation = animation->update();
 
+	if (collisionDown == true) {
+		onAir = false;
+	}
+	else {
+		onAir = true;
+	}
+
 	// Acabo la animación, no sabemos cual
 	if (endAnimation) {
 		// Estaba disparando
@@ -79,7 +86,10 @@ void Player::moveX(float axis) {
 }
 
 void Player::jump() {
-	vy = -16;
+	if (!onAir) {
+		vy = -16;
+		onAir = true;
+	}
 }
 
 void Player::moveY(float axis) {

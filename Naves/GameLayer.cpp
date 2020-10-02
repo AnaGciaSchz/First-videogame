@@ -205,13 +205,13 @@ void GameLayer::update() {
 
 
 		for (auto const& projectile : projectiles) {
-			if (projectile->isInRender(scrollX) == false) {
+			if (projectile->isInRender(scrollX) == false || projectile->vx == 0) {
 
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
 
-				if (!pInList) {//
+				if (!pInList) {
 					deleteProjectiles.push_back(projectile);
 				}
 			}

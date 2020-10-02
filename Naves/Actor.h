@@ -19,6 +19,7 @@ public:
 	int height;
 	int fileWidth; //tamaño imagen
 	int fileHeight; //tamaño imagen
+	bool collisionDown;
 	Game* game;
 };
 
