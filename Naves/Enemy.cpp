@@ -35,7 +35,7 @@ void Enemy::update() {
 		animation = aDying;
 	}
 	if (state != game->stateDying) {
-	x = x + vx;
+		x = x + vx;
 	}
 }
 

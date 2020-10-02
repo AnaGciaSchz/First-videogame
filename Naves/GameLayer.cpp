@@ -6,6 +6,7 @@ GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
 
 void GameLayer::init() {
 	delete player; //antes de crear nuevo personaje, se borra anterior
+	space = new Space(1);
 	scrollX = 0;
 	tiles.clear(); //se limpian al inicial el nivel
 
@@ -53,6 +54,7 @@ void GameLayer::processControls() {
 	if (controlShoot) {
 		Projectile* newProjectile = player->shoot();
 		if (newProjectile != NULL) {
+			space->addDynamicActor(newProjectile);
 			projectiles.push_back(newProjectile);
 		}
 	}
@@ -149,6 +151,7 @@ void GameLayer::keysToControls(SDL_Event event) {
 }
 
 void GameLayer::update() {
+	space->update();
 	background->update();
 	player->update();
 	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
@@ -237,11 +240,13 @@ void GameLayer::update() {
 	//Eliminamos los enemigos y proyectiles que han colisionado
 	for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
+		space->removeDynamicActor(delEnemy);
 	}
 	deleteEnemies.clear();
 
 	for (auto const& delProjectile : deleteProjectiles) {
 		projectiles.remove(delProjectile);
+		space->removeDynamicActor(delProjectile);
 	}
 	deleteProjectiles.clear();
 
@@ -291,12 +296,14 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		// modificación para empezar a contar desde el suelo.
 		enemy->y = enemy->y - enemy->height / 2;
 		enemies.push_back(enemy);
+		space->addDynamicActor(enemy);
 		break;
 	}
 	case '1': {
 		player = new Player(x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		player->y = player->y - player->height / 2;
+		space->addDynamicActor(player);
 		break;
 	}
 	case '#': {
@@ -304,6 +311,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		// modificación para empezar a contar desde el suelo.
 		tile->y = tile->y - tile->height / 2;
 		tiles.push_back(tile);
+		space->addStaticActor(tile);
 		break;
 	}
 	}

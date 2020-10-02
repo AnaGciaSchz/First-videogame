@@ -6,6 +6,7 @@
 #include "Projectile.h"
 #include "Text.h"
 #include "Tile.h"
+#include "Space.h" // importar
 
 #include <list>
 #include <fstream>
@@ -28,6 +29,7 @@ public:
 
 	int mapWidth;
 	list<Tile*> tiles;
+	Space* space;
 
 	Text* textPoints; //texto de los puntos
 	int points; //cuantos puntos tenemos
