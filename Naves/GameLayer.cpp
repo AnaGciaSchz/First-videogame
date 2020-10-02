@@ -207,7 +207,7 @@ void GameLayer::update() {
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end();
 
-				if (!pInList) {
+				if (!pInList) {//
 					deleteProjectiles.push_back(projectile);
 				}
 			}
