@@ -158,8 +158,11 @@ void GameLayer::update() {
 	// Colisiones, Player - Enemy
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
-			init();
-			return; // Cortar el for
+			player->loseLife();
+			if (player->lifes <= 0) {
+				init();
+				return;
+			}
 		}
 	}
 
