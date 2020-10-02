@@ -7,7 +7,7 @@ public:
 	Actor(string filename, float x, float y, int width, int height, Game* game); //game es quien lo pinta
 	~Actor();
 	virtual void draw(float scrollX = 0);
-	bool isInRender();
+	bool isInRender(float scrollX = 0);
 	bool isOverlap(Actor* actor);
 
 	SDL_Texture* texture; //cosas de SDL, no importante

@@ -25,7 +25,21 @@ void GameLayer::init() {
 }
 
 void GameLayer::calculateScroll() {
-	scrollX = player->x-200;//-200 para no estar muy pegado al jugador
+	// limite izquierda
+	if (player->x > WIDTH * 0.3) {
+		if (player->x - scrollX < WIDTH * 0.3) {
+			scrollX = player->x - WIDTH * 0.3;
+		}
+	}
+
+	// limite derecha
+	if (player->x < mapWidth - WIDTH * 0.3) {
+		if (player->x - scrollX > WIDTH * 0.7) {
+			scrollX = player->x - WIDTH * 0.7;
+		}
+	}
+
+	//scrollX = player->x-200;//-200 para no estar muy pegado al jugador
 }
 
 void GameLayer::processControls() {
@@ -194,7 +208,7 @@ void GameLayer::update() {
 
 
 		for (auto const& projectile : projectiles) {
-			if (projectile->isInRender() == false) {
+			if (projectile->isInRender(scrollX) == false) {
 
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
