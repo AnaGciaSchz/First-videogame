@@ -1,6 +1,7 @@
 #include "Player.h"
 
 Player::Player(float x, float y, Game* game) :Actor("res/jugador.png",x,y,35,35,game){
+	onAir = false;
 	orientation = game->orientationRight;
 	state = game->stateMoving;
 	aIdleRight = new Animation("res/jugador_idle_derecha.png", width, height,
@@ -75,6 +76,10 @@ void Player::update() {
 
 void Player::moveX(float axis) {
 	vx = axis * 3;
+}
+
+void Player::jump() {
+	vy = -16;
 }
 
 void Player::moveY(float axis) {

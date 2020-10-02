@@ -69,14 +69,8 @@ void GameLayer::processControls() {
 		player->moveX(0);
 	}
 	// Eje Y
-	if (controlMoveY > 0) {
-		player->moveY(1);
-	}
-	else if (controlMoveY < 0) {
-		player->moveY(-1);
-	}
-	else {
-		player->moveY(0);
+	 if (controlMoveY < 0) {
+		player->jump();
 	}
 
 
