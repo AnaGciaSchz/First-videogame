@@ -7,11 +7,12 @@ GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
 void GameLayer::init() {
 	delete player; //antes de crear nuevo personaje, se borra anterior
 
+	tiles.clear(); //se limpian al inicial el nivel
+
 	points = 0;
 	textPoints = new Text("0", WIDTH * 0.92, HEIGHT * 0.04, game);
 	textPoints->content = to_string(points);
 
-	player = new Player(50,50,game); // new = se crea en el heap y no se borra
 	background = new Background("res/fondo_2.png", WIDTH * 0.5, HEIGHT * 0.5,-1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game); //Va a estar en el 85% de la x y el 5% de y
@@ -20,10 +21,7 @@ void GameLayer::init() {
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
-	enemies.push_back(new Enemy(300, 50, game));
-	enemies.push_back(new Enemy(300, 200, game)); //crea instancia de enemy, la copia y mete la copia, al final tenemos 2
-	//emplace_back (Enemy...) ´con esto nos ahorramos las copias
-
+	loadMap("res/0.txt"); //ahora lo cargamos todo a partir del mapa 
 }
 
 void GameLayer::processControls() {
@@ -134,15 +132,6 @@ void GameLayer::keysToControls(SDL_Event event) {
 
 void GameLayer::update() {
 	background->update();
-	// Generar enemigos
-	newEnemyTime--;
-	if (newEnemyTime <= 0) {
-		int rX = (rand() % (600 - 500)) + 1 + 500;
-		int rY = (rand() % (300 - 60)) + 1 + 60;
-		enemies.push_back(new Enemy(rX, rY, game));
-		newEnemyTime = std::min(200-killedEnemys,50); //Cada vez que se mata un enemigo, estos aparecen antes
-	}
-
 	player->update();
 	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
 		enemy->update();
@@ -247,8 +236,69 @@ void GameLayer::update() {
 	std::cout << "update GameLayer" << std::endl;
 }
 
+
+void GameLayer::loadMap(string name) {
+	char character; //si no hay puntero se pone en el stack
+	string line; //se ha creado un objeto dentro del stack, es similar a ponerlo con el new (pero new se hace en el heap)
+	//new devuelve una posición en memoria en el heap
+	ifstream streamFile(name.c_str());//el constructor se llama en la variable directamente
+	if (!streamFile.is_open()) {
+		cout << "Fallo al abrir el fichero de mapa" << endl;
+		return;
+	}
+	else {
+		// Por línea
+		for (int i = 0; getline(streamFile, line); i++) {
+			istringstream streamLine(line);
+			mapWidth = line.length() * 40; // Ancho del mapa en pixels
+			// Por carácter (en cada línea)
+			for (int j = 0; !streamLine.eof(); j++) {
+				streamLine >> character; // Leer character
+				cout << character;
+				float x = 40 / 2 + j * 40; // x central
+				float y = 32 + i * 32; // y suelo
+				loadMapObject(character, x, y);
+			}
+			cout << character << endl;
+		}
+	}
+	streamFile.close();
+}
+
+void GameLayer::loadMapObject(char character, float x, float y)
+{
+	switch (character) {
+	case 'E': {
+		Enemy* enemy = new Enemy(x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		enemy->y = enemy->y - enemy->height / 2;
+		enemies.push_back(enemy);
+		break;
+	}
+	case '1': {
+		player = new Player(x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		player->y = player->y - player->height / 2;
+		break;
+	}
+	case '#': {
+		Tile* tile = new Tile("res/bloque_tierra.png", x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		tile->y = tile->y - tile->height / 2;
+		tiles.push_back(tile);
+		break;
+	}
+	}
+}
+
+
 void GameLayer::draw() {
 	background->draw();
+
+	for (auto const& tile : tiles) {
+		tile->draw();
+	}
+	//escribir int const a = 0 es lo mismo que const int a = 0
 	for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}

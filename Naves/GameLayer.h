@@ -5,8 +5,11 @@
 #include "Enemy.h"
 #include "Projectile.h"
 #include "Text.h"
+#include "Tile.h"
 
 #include <list>
+#include <fstream>
+#include <sstream>
 
 class GameLayer : public Layer
 {
@@ -18,6 +21,12 @@ public:
 	virtual void draw() override; //dibujar
 	void keysToControls(SDL_Event event);
 
+	void loadMap(string name);
+	void loadMapObject(char character, float x, float y);
+
+	int mapWidth;
+	list<Tile*> tiles;
+
 	Text* textPoints; //texto de los puntos
 	int points; //cuantos puntos tenemos
 	Player* player;
@@ -27,7 +36,6 @@ public:
 	bool controlShoot = false; //para disparar
 	int controlMoveY = 0;
 	int controlMoveX = 0;
-	int newEnemyTime = 0; //Cada cuanto aparece un enemigo nuevo
 	int killedEnemys = 0; //número de enemigos matados para ir incrementando la dificultad del juego
 
 	list<Enemy*> enemies; //lista enlazada, arraylist sería vector, array es un array con cosillas
