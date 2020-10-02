@@ -20,7 +20,7 @@ Actor::~Actor() {
 }
 
 
-void Actor::draw() {
+void Actor::draw(float scrollX) {
 	SDL_Rect source; //dimensiones imagen, no tiene new, se crea en el stack, no en el heap, se construye igualmente
 	source.x = 0;
 	source.y = 0;
@@ -28,7 +28,7 @@ void Actor::draw() {
 	source.h = fileHeight;
 
 	SDL_Rect destination;
-	destination.x = x - width/2;
+	destination.x = x - width/2 - scrollX;
 	destination.y = y - height / 2;
 	destination.w = width;
 	destination.h = height;

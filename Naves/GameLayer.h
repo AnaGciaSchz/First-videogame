@@ -23,6 +23,8 @@ public:
 
 	void loadMap(string name);
 	void loadMapObject(char character, float x, float y);
+	void calculateScroll();
+	float scrollX;
 
 	int mapWidth;
 	list<Tile*> tiles;

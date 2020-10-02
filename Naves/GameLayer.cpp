@@ -6,7 +6,7 @@ GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
 
 void GameLayer::init() {
 	delete player; //antes de crear nuevo personaje, se borra anterior
-
+	scrollX = 0;
 	tiles.clear(); //se limpian al inicial el nivel
 
 	points = 0;
@@ -22,6 +22,10 @@ void GameLayer::init() {
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	loadMap("res/0.txt"); //ahora lo cargamos todo a partir del mapa 
+}
+
+void GameLayer::calculateScroll() {
+	scrollX = player->x-200;//-200 para no estar muy pegado al jugador
 }
 
 void GameLayer::processControls() {
@@ -293,19 +297,20 @@ void GameLayer::loadMapObject(char character, float x, float y)
 
 
 void GameLayer::draw() {
+	calculateScroll();
 	background->draw();
 
 	for (auto const& tile : tiles) {
-		tile->draw();
+		tile->draw(scrollX);
 	}
 	//escribir int const a = 0 es lo mismo que const int a = 0
 	for (auto const& projectile : projectiles) {
-		projectile->draw();
+		projectile->draw(scrollX);
 	}
-	player->draw();
+	player->draw(scrollX);
 
 	for (auto const& enemy : enemies) {
-		enemy->draw();
+		enemy->draw(scrollX);
 	}
 	textPoints->draw();
 	backgroundPoints->draw(); //Lo pintamos el último para que los enemigos no lo tapen tampoco
