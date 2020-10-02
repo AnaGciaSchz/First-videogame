@@ -28,6 +28,9 @@ public:
 	Animation* aShootingRight;
 	Animation* aShootingLeft;
 	Animation* animation; // Referencia a la animación mostrada
+	Animation* aJumpingRight;
+	Animation* aJumpingLeft;
+
 
 	int shootCadence = 30;
 	int shootTime = 0;
