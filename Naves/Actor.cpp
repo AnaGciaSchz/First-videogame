@@ -2,8 +2,7 @@
 
 Actor::Actor(string filename, float x, float y, int width, int height, Game* game) {
 	this->game = game;
-	SDL_Surface* surface = IMG_Load(filename.c_str());//coger el texto en forma de const char (como lo haría c)
-	texture = SDL_CreateTextureFromSurface(game->renderer, surface);
+	texture = game->getTexture(filename);
 	this->x = x;
 	this->y = y;
 	// lo que mide el fichero
@@ -16,7 +15,6 @@ Actor::Actor(string filename, float x, float y, int width, int height, Game* gam
 }
 
 Actor::~Actor() {
-	SDL_DestroyTexture(texture);
 }
 
 

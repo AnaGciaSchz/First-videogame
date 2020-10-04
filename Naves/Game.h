@@ -3,6 +3,7 @@
 // Todas las librerias de SDL y otras utilidades
 #include <iostream>
 #include <string>
+#include <map> 
 using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>
@@ -21,6 +22,8 @@ public:
 	Game();
 	void loop();
 	void scale();
+	SDL_Texture* getTexture(string filename);
+	map<string, SDL_Texture*> mapTextures; // map - cache
 	bool scaledToMax = false;
 	float scaleLower = 1;
 	SDL_Window* window; // ventana
