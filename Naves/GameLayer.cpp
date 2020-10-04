@@ -10,6 +10,9 @@ void GameLayer::init() {
 	scrollX = 0;
 	tiles.clear(); //se limpian al inicial el nivel
 
+	audioBackground = new Audio("res/musica_ambiente.mp3", true);
+	audioBackground->play();
+
 	points = 0;
 	textPoints = new Text("0", WIDTH * 0.92, HEIGHT * 0.04, game);
 	textPoints->content = to_string(points);

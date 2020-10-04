@@ -2,6 +2,7 @@
 
 #include "Actor.h"
 #include "Projectile.h" 
+#include "Audio.h"
 #include "Animation.h" // incluir animacion 
 
 class Player : public Actor
@@ -31,6 +32,7 @@ public:
 	Animation* aJumpingRight;
 	Animation* aJumpingLeft;
 
+	Audio* audioShoot;
 
 	int shootCadence = 30;
 	int shootTime = 0;

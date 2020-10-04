@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Projectile.h"
 #include "Text.h"
+#include "Audio.h" 
 #include "Tile.h"
 #include "Space.h" // importar
 
@@ -21,6 +22,7 @@ public:
 	virtual void update() override; //actualizar
 	virtual void draw() override; //dibujar
 	void keysToControls(SDL_Event event);
+	Audio* audioBackground;
 
 	void loadMap(string name);
 	void loadMapObject(char character, float x, float y);

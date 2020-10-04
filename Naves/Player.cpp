@@ -21,6 +21,7 @@ Player::Player(float x, float y, Game* game) :Actor("res/jugador.png",x,y,35,35,
 	aJumpingLeft = new Animation("res/jugador_saltando_izquierda.png",
 		width, height, 160, 40, 6, 4, true, game);
 
+	audioShoot = new Audio("res/efecto_disparo.wav", false);
 
 	animation = aIdleRight;
 
@@ -137,6 +138,7 @@ void Player::moveY(float axis) {
 
 Projectile* Player::shoot() {
 	if (shootTime == 0) {
+		audioShoot->play();
 		state = game->stateShooting;
 		shootTime = shootCadence;
 		aShootingLeft->currentFrame = 0; //"Rebobinar" animación
