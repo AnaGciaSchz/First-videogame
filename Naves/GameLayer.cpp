@@ -5,6 +5,10 @@ GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
 }
 
 void GameLayer::init() {
+	audioBackground = new Audio("res/musica_ambiente.mp3", true);
+	audioBackground->play();
+
+
 	delete player; //antes de crear nuevo personaje, se borra anterior
 
 	points = 0;
@@ -229,6 +233,7 @@ void GameLayer::update() {
 
 	for (auto const& delProjectile : deleteProjectiles) {
 		projectiles.remove(delProjectile);
+		delete delProjectile;
 	}
 	deleteProjectiles.clear();
 
