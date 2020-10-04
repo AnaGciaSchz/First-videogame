@@ -3,6 +3,7 @@
 // Todas las librerias de SDL y otras utilidades
 #include <iostream>
 #include <string>
+#include <map> 
 using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>
@@ -23,6 +24,8 @@ public:
 	void scale();
 	bool scaledToMax = false;
 	float scaleLower = 1;
+	SDL_Texture* getTexture(string filename);
+	map<string, SDL_Texture*> mapTextures; // map - cache
 	SDL_Window* window; // ventana
 	SDL_Renderer* renderer; // renderizador
 	TTF_Font* font;//Fuente para escribir, sirve cualquier fuente TTF, nos sirve porque ya tenemos el #include <SDL_ttf.h>)
