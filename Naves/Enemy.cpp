@@ -1,7 +1,5 @@
 #include "Enemy.h"
 
-#include "Enemy.h"
-
 Enemy::Enemy(float x, float y, Game* game)
 	: Actor("res/enemigo.png", x, y, 36, 40, game) {
 
@@ -24,3 +22,12 @@ void Enemy::draw() {
 	animation->draw(x, y);
 }
 
+void Enemy::loseLife() {
+	if (!isDead()) {
+		enemyLives--;
+	}
+}
+
+bool Enemy::isDead() {
+	return enemyLives == 0;
+}

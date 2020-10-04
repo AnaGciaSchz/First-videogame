@@ -1,6 +1,6 @@
 #include "GameLayer.h"
 
-GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
+GameLayer::GameLayer(Game* game) : Layer(game) { //llamamos al super
 	init();
 }
 
@@ -15,8 +15,8 @@ void GameLayer::init() {
 	textPoints = new Text("0", WIDTH * 0.92, HEIGHT * 0.04, game);
 	textPoints->content = to_string(points);
 
-	player = new Player(50,50,game); // new = se crea en el heap y no se borra
-	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5,-1, game);
+	player = new Player(50, 50, game); // new = se crea en el heap y no se borra
+	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game); //Va a estar en el 85% de la x y el 5% de y
 
@@ -144,7 +144,7 @@ void GameLayer::update() {
 		int rX = (rand() % (600 - 500)) + 1 + 500;
 		int rY = (rand() % (300 - 60)) + 1 + 60;
 		enemies.push_back(new Enemy(rX, rY, game));
-		newEnemyTime = std::min(200-killedEnemys,50); //Cada vez que se mata un enemigo, estos aparecen antes
+		newEnemyTime = std::min(200 - killedEnemys, 50); //Cada vez que se mata un enemigo, estos aparecen antes
 	}
 
 	player->update();
@@ -167,7 +167,7 @@ void GameLayer::update() {
 
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
-			if (enemy->isOverlap(projectile)) { //Si le da un proyectil o se sale de la pantalla
+			if (enemy->isOverlap(projectile)) { //Si le da un proyectil
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end(); //comprobar si el proyectil ya estaba en la lista
@@ -175,18 +175,20 @@ void GameLayer::update() {
 				if (!pInList) {
 					deleteProjectiles.push_back(projectile);
 				}
+				enemy->loseLife();
+				if (enemy->isDead()) {
+					bool eInList = std::find(deleteEnemies.begin(),
+						deleteEnemies.end(),
+						enemy) != deleteEnemies.end(); //comprobar si el enemigo ya estaba en la lista
 
-				bool eInList = std::find(deleteEnemies.begin(),
-					deleteEnemies.end(),
-					enemy) != deleteEnemies.end(); //comprobar si el enemigo ya estaba en la lista
+					if (!eInList) {
+						deleteEnemies.push_back(enemy);
+					}
+					points++;
+					textPoints->content = to_string(points);
+				}//isDead
 
-				if (!eInList) {
-					deleteEnemies.push_back(enemy);
-				}
-				points++;
-				textPoints->content = to_string(points);
-
-			}
+			}//overlap
 			if (enemy->x + enemy->width / 2 <= 0) { //si el enemigo se sale de la pantalla
 				bool eInList = std::find(deleteEnemies.begin(),
 					deleteEnemies.end(),
