@@ -24,10 +24,10 @@ void Enemy::draw() {
 
 void Enemy::loseLife() {
 	if (!isDead()) {
-		enemyLives--;
+		enemyLifes--;
 	}
 }
 
 bool Enemy::isDead() {
-	return enemyLives == 0;
+	return enemyLifes == 0;
 }

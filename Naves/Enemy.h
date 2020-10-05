@@ -11,7 +11,7 @@ public:
 	void loseLife();
 	bool isDead();
 
-	int enemyLives = 3;
+	int enemyLifes = 3;
 	Animation* aMoving;
 	Animation* animation; // Referencia a la animación mostrada
 
