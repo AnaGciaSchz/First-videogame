@@ -10,6 +10,10 @@ public:
 	Player(float x, float y, Game* game);
 	Projectile* shoot();
 	Audio* audioShoot;
+	int playerLifes = 3;
+
+	void loseLife();
+	bool isDead();
 	void update();
 	void moveX(float axis);
 	void moveY(float axis);

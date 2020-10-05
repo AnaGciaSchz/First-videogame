@@ -30,4 +30,14 @@ Projectile* Player::shoot() {
 	}
 }
 
+void Player::loseLife() {
+	if (!isDead()) {
+		playerLifes--;
+	}
+}
+
+bool Player::isDead() {
+	return playerLifes == 0;
+}
+
 //nullptr

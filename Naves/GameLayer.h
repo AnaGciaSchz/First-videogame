@@ -24,6 +24,9 @@ public:
 	Player* player;
 	Background* background;
 	Actor* backgroundPoints; //Icono para los puntos
+	Actor* playersLifeIcon;
+	Text* playersLifeText; 
+
 	//Necesario inicializar aquí, no nos interesa que tenga otros valores de inicio
 	bool controlShoot = false; //para disparar
 	int controlMoveY = 0;

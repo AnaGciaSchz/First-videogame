@@ -19,7 +19,10 @@ void GameLayer::init() {
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game); //Va a estar en el 85% de la x y el 5% de y
-
+	
+	playersLifeIcon=new Actor("res/corazon.png", WIDTH * 0.05, HEIGHT * 0.07, 44, 36, game);
+	playersLifeText = new Text("0", (WIDTH * 0.05)+44, HEIGHT * 0.06, game);
+	playersLifeText->content = to_string(player->playerLifes);
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
 
@@ -151,19 +154,32 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
 		enemy->update();
 	}
+
+	//Listas temporales para anotar qué queremos eliminar (y no borrar de las listas mientras las recorremos)
+	list<Enemy*> deleteEnemies;
+	list<Projectile*> deleteProjectiles;
+
 	// Colisiones, Player - Enemy
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
-			init();
-			return; // Cortar el for
+			player->loseLife();
+			playersLifeText->content = to_string(player->playerLifes);
+			if (player->isDead()) {
+				init();
+				return; // Cortar el for
+			}
+			bool eInList = std::find(deleteEnemies.begin(),
+				deleteEnemies.end(),
+				enemy) != deleteEnemies.end(); //comprobar si el enemigo ya estaba en la lista
+
+			if (!eInList) {
+				deleteEnemies.push_back(enemy);
+			}
 		}
 	}
 
 	// Colisiones , Enemy - Projectile
 
-	//Listas temporales para anotar qué queremos eliminar (y no borrar de las listas mientras las recorremos)
-	list<Enemy*> deleteEnemies;
-	list<Projectile*> deleteProjectiles;
 
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
@@ -245,7 +261,7 @@ void GameLayer::update() {
 		projectile->update();
 	}
 
-	std::cout << "update GameLayer" << std::endl;
+	//std::cout << "update GameLayer" << std::endl;
 }
 
 void GameLayer::draw() {
@@ -260,6 +276,9 @@ void GameLayer::draw() {
 	}
 	textPoints->draw();
 	backgroundPoints->draw(); //Lo pintamos el último para que los enemigos no lo tapen tampoco
+
+	playersLifeText->draw();
+	playersLifeIcon->draw();
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
