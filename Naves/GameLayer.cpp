@@ -26,6 +26,8 @@ void GameLayer::init() {
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
 
+	coins.clear();
+
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	enemies.push_back(new Enemy(300, 50, game));
 	enemies.push_back(new Enemy(300, 200, game)); //crea instancia de enemy, la copia y mete la copia, al final tenemos 2
@@ -150,7 +152,20 @@ void GameLayer::update() {
 		newEnemyTime = std::min(200 - killedEnemys, 50); //Cada vez que se mata un enemigo, estos aparecen antes
 	}
 
+	//Generar monedas
+	newCoinTime--;
+	if (newCoinTime <= 0) {
+		int rX = (rand() % (600 - 500)) + 1 + 500;
+		int rY = (rand() % (300 - 60)) + 1 + 60;
+		coins.push_back(new Coin(rX, rY, game));
+		newCoinTime = 300;
+	}
+
+
 	player->update();
+	for (auto const& coin : coins) { //auto es como var o dynamic, infiere tipo
+		coin->update();
+	}
 	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
 		enemy->update();
 	}
@@ -158,6 +173,24 @@ void GameLayer::update() {
 	//Listas temporales para anotar qué queremos eliminar (y no borrar de las listas mientras las recorremos)
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
+	list<Coin*> deleteCoins;
+
+	//Colisiones player - Coin
+	for (auto const& coin : coins) {
+		if (player->isOverlap(coin)) {
+			coin->addLife(player);
+			playersLifeText->content = to_string(player->playerLifes);
+
+			bool eInList = std::find(deleteCoins.begin(),
+				deleteCoins.end(),
+				coin) != deleteCoins.end(); //comprobar si la moneda ya estaba en la lista
+
+			if (!eInList) {
+				deleteCoins.push_back(coin);
+			}
+		}
+	}
+
 
 	// Colisiones, Player - Enemy
 	for (auto const& enemy : enemies) {
@@ -249,6 +282,11 @@ void GameLayer::update() {
 	}
 	deleteEnemies.clear();
 
+	for (auto const& delCoin : deleteCoins) {
+		coins.remove(delCoin);
+	}
+	deleteCoins.clear();
+
 	for (auto const& delProjectile : deleteProjectiles) {
 		projectiles.remove(delProjectile);
 		delete delProjectile;
@@ -270,6 +308,10 @@ void GameLayer::draw() {
 		projectile->draw();
 	}
 	player->draw();
+
+	for (auto const& coin : coins) {
+		coin->draw();
+	}
 
 	for (auto const& enemy : enemies) {
 		enemy->draw();
