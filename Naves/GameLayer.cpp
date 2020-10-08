@@ -19,14 +19,16 @@ void GameLayer::init() {
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game); //Va a estar en el 85% de la x y el 5% de y
-	
-	playersLifeIcon=new Actor("res/corazon.png", WIDTH * 0.05, HEIGHT * 0.07, 44, 36, game);
-	playersLifeText = new Text("0", (WIDTH * 0.05)+44, HEIGHT * 0.06, game);
+
+	playersLifeIcon = new Actor("res/corazon.png", WIDTH * 0.05, HEIGHT * 0.07, 44, 36, game);
+	playersLifeText = new Text("0", (WIDTH * 0.05) + 44, HEIGHT * 0.06, game);
 	playersLifeText->content = to_string(player->playerLifes);
 
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
 
 	coins.clear();
+
+	bombs.clear();
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	enemies.push_back(new Enemy(300, 50, game));
@@ -161,19 +163,33 @@ void GameLayer::update() {
 		newCoinTime = 300;
 	}
 
+	//Generar bombas
+	newBombTime--;
+	if (newBombTime <= 0) {
+		int rX = (rand() % (600 - 500)) + 1 + 500;
+		int rY = (rand() % (300 - 60)) + 1 + 60;
+		bombs.push_back(new Bomb(rX, rY, game));
+		newBombTime = 1000;
+	}
+
 
 	player->update();
 	for (auto const& coin : coins) { //auto es como var o dynamic, infiere tipo
 		coin->update();
 	}
-	for (auto const& enemy : enemies) { //auto es como var o dynamic, infiere tipo
+	for (auto const& enemy : enemies) { 
 		enemy->update();
+	}
+
+	for (auto const& bomb : bombs) { 
+		bomb->update();
 	}
 
 	//Listas temporales para anotar qué queremos eliminar (y no borrar de las listas mientras las recorremos)
 	list<Enemy*> deleteEnemies;
 	list<Projectile*> deleteProjectiles;
 	list<Coin*> deleteCoins;
+	list<Bomb*> deleteBombs;
 
 	//Colisiones player - Coin
 	for (auto const& coin : coins) {
@@ -187,6 +203,21 @@ void GameLayer::update() {
 
 			if (!eInList) {
 				deleteCoins.push_back(coin);
+			}
+		}
+	}
+
+	//Colisiones player - Bomb
+	for (auto const& bomb : bombs) {
+		if (player->isOverlap(bomb)) {
+			bomb->removeAllEnemies(enemies, &deleteEnemies);
+
+			bool eInList = std::find(deleteBombs.begin(),
+				deleteBombs.end(),
+				bomb) != deleteBombs.end(); //comprobar si la bomba ya estaba en la lista
+
+			if (!eInList) {
+				deleteBombs.push_back(bomb);
 			}
 		}
 	}
@@ -287,6 +318,11 @@ void GameLayer::update() {
 	}
 	deleteCoins.clear();
 
+	for (auto const& delBomb: deleteBombs) {
+		bombs.remove(delBomb);
+	}
+	deleteBombs.clear();
+
 	for (auto const& delProjectile : deleteProjectiles) {
 		projectiles.remove(delProjectile);
 		delete delProjectile;
@@ -311,6 +347,10 @@ void GameLayer::draw() {
 
 	for (auto const& coin : coins) {
 		coin->draw();
+	}
+
+	for (auto const& bomb : bombs) {
+		bomb->draw();
 	}
 
 	for (auto const& enemy : enemies) {
