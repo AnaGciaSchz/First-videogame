@@ -39,6 +39,7 @@ public:
 	int killedEnemys = 0; //número de enemigos matados para ir incrementando la dificultad del juego
 	Audio* audioBackground;
 
+	Player** players = new Player* [2] ;
 	list<Bomb*> bombs;
 	list<Coin*> coins;
 	list<Enemy*> enemies; //lista enlazada, arraylist sería vector, array es un array con cosillas

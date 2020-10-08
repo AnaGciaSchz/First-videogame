@@ -1,28 +1,31 @@
 #include "Player.h"
 
-Player::Player(float x, float y, Game* game) :Actor("res/jugador.png",x,y,50,57,game){
+Player::Player(string image,float x, float y, int sizeX, int sizeY, int shootCadence,float v,Game* game) :Actor(image,x,y,sizeX,sizeY,game){
 	audioShoot = new Audio("res/efecto_disparo.wav", false);
+	this->shootCadence = shootCadence;
+	this->v = v;
 }
 void Player::update() {
 	if (shootTime > 0) {
 		shootTime--;
 	}
+	this->v = v;
 	x = x + vx;
 	y = y + vy;
 }
 
 void Player::moveX(float axis) {
-	vx = axis * 3;
+	vx = axis * v;
 }
 
 void Player::moveY(float axis) {
-	vy = axis * 3;
+	vy = axis * v;
 }
 
 Projectile* Player::shoot() {
 	if (shootTime == 0) {
 		audioShoot->play();
-		shootTime = shootCadence;
+		shootTime = this->shootCadence;
 		return new Projectile(x, y, game);
 	}
 	else {

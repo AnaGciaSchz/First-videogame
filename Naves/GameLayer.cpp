@@ -15,7 +15,10 @@ void GameLayer::init() {
 	textPoints = new Text("0", WIDTH * 0.92, HEIGHT * 0.04, game);
 	textPoints->content = to_string(points);
 
-	player = new Player(50, 50, game); // new = se crea en el heap y no se borra
+	players[0] = new Player("res/jugador.png",50, 50,50,57,30, 3, game);
+	players[1] =new Player("res/jugador2.png",50, 50,50,57,10, 4, game);
+
+	player = players[0]; // new = se crea en el heap y no se borra
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game); //Va a estar en el 85% de la x y el 5% de y
@@ -89,8 +92,18 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_ESCAPE: //Salir del juego
 			game->loopActive = false;
 			break;
-		case SDLK_1: //Poner en pantalla completa
+		case SDLK_3: //Poner en pantalla completa
 			game->scale();
+			break;
+		case SDLK_1: //Poner en pantalla completa
+			players[0]->x = player->x;
+			players[0]->y = player->y;
+			player = players[0];
+			break;
+		case SDLK_2: //Poner en pantalla completa
+			players[1]->x = player->x;
+			players[1]->y = player->y;
+			player = players[1];
 			break;
 		case SDLK_d: // derecha
 			controlMoveX = 1;
