@@ -22,6 +22,7 @@ public:
 	virtual void update() override; //actualizar
 	virtual void draw() override; //dibujar
 	void keysToControls(SDL_Event event);
+	void mouseToControls(SDL_Event event); // USO DE MOUSE
 	Audio* audioBackground;
 
 	void loadMap(string name);
