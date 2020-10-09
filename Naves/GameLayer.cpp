@@ -6,6 +6,11 @@ GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
 
 void GameLayer::init() {
 	delete player; //antes de crear nuevo personaje, se borra anterior
+
+	buttonJump = new Actor("res/boton_salto.png", WIDTH * 0.9, HEIGHT * 0.55, 100, 100, game);
+	buttonShoot = new Actor("res/boton_disparo.png", WIDTH * 0.75, HEIGHT * 0.83, 100, 100, game);
+
+
 	space = new Space(1);
 	scrollX = 0;
 	tiles.clear(); //se limpian al inicial el nivel
@@ -222,6 +227,7 @@ void GameLayer::update() {
 				}
 			}
 		}
+	}
 
 
 		for (auto const& projectile : projectiles) {
@@ -237,7 +243,6 @@ void GameLayer::update() {
 			}
 		}
 
-	}
 
 	for (auto const& enemy : enemies) {
 		if (enemy->state == game->stateDead) {
@@ -358,6 +363,11 @@ void GameLayer::draw() {
 	}
 	textPoints->draw();
 	backgroundPoints->draw(); //Lo pintamos el último para que los enemigos no lo tapen tampoco
+
+	// HUD
+	buttonJump->draw(); // NO TIENEN SCROLL, POSICION FIJA
+	buttonShoot->draw(); // NO TIENEN SCROLL, POSICION FIJA
+
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }

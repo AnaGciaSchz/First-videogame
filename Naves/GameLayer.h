@@ -45,6 +45,10 @@ public:
 	int controlMoveX = 0;
 	int killedEnemys = 0; //número de enemigos matados para ir incrementando la dificultad del juego
 
+	// Elementos de interfaz
+	Actor* buttonJump;
+	Actor* buttonShoot;
+
 	list<Enemy*> enemies; //lista enlazada, arraylist sería vector, array es un array con cosillas
 	list<Projectile*> projectiles;
 };

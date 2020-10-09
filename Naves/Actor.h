@@ -21,5 +21,8 @@ public:
 	int fileHeight; //tamaño imagen
 	bool collisionDown;
 	Game* game;
+
+	bool containsPoint(int pointX, int pointY); // contiene punto
+	bool clicked; // Está pulsado
 };
 
