@@ -56,8 +56,20 @@ void GameLayer::processControls() {
 	// obtener controles
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) { //como no es un puntero, pasamos referencia
-		keysToControls(event);
-		mouseToControls(event);
+		// Cambio automático de input
+		if (event.type == SDL_KEYDOWN) {
+			game->input = game->inputKeyboard;
+		}
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			game->input = game->inputMouse;
+		}
+		// Procesar teclas
+		if (game->input == game->inputKeyboard) {
+			keysToControls(event);
+		}
+		if (game->input == game->inputMouse) {
+			mouseToControls(event);
+		}
 	}
 	//procesar controles
 	// Disparar
@@ -426,9 +438,11 @@ void GameLayer::draw() {
 	backgroundPoints->draw(); //Lo pintamos el último para que los enemigos no lo tapen tampoco
 
 	// HUD
-	buttonJump->draw(); // NO TIENEN SCROLL, POSICION FIJA
-	pad->draw(); // NO TIENEN SCROLL, POSICION FIJA
-	buttonShoot->draw(); // NO TIENEN SCROLL, POSICION FIJA
+	if (game->input == game->inputMouse) {
+		buttonJump->draw(); // NO TIENEN SCROLL, POSICION FIJA
+		pad->draw(); // NO TIENEN SCROLL, POSICION FIJA
+		buttonShoot->draw(); // NO TIENEN SCROLL, POSICION FIJA
+	}
 
 
 	SDL_RenderPresent(game->renderer); // Renderiza
