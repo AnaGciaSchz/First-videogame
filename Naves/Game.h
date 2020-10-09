@@ -31,6 +31,8 @@ public:
 	TTF_Font* font;//Fuente para escribir, sirve cualquier fuente TTF, nos sirve porque ya tenemos el #include <SDL_ttf.h>)
 	bool loopActive; // Juego activo
 
+	Layer* layer;
+	Layer* menuLayer;
 	Layer* gameLayer;
 
 	int const stateMoving = 1;

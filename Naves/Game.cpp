@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GameLayer.h"
+#include "MenuLayer.h"
 
 using namespace std;
 #define FPS 30
@@ -15,7 +16,10 @@ Game::Game() {
 	// https://wiki.libsdl.org/SDL_HINT_RENDER_SCALE_QUALITY
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
+	menuLayer = new MenuLayer(this);
+
 	gameLayer = new GameLayer(this);
+	layer = menuLayer; // Pantalla INICIAL MENULAYER
 
 	// fuentes
 	TTF_Init();
@@ -82,11 +86,11 @@ void Game::loop() {
 		initTick = SDL_GetTicks();
 
 		// Controles
-		gameLayer->processControls();
+		layer->processControls();
 		// Actualizar elementos
-		gameLayer->update();
+		layer->update();
 		// Dibujar
-		gameLayer->draw();
+		layer->draw();
 
 		endTick = SDL_GetTicks();
 		differenceTick = endTick - initTick;
