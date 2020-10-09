@@ -7,7 +7,8 @@
 #include "Text.h"
 #include "Audio.h" 
 #include "Tile.h"
-#include "Space.h" // importar
+#include "Space.h"
+#include "Pad.h"
 
 #include <list>
 #include <fstream>
@@ -47,6 +48,7 @@ public:
 	int killedEnemys = 0; //número de enemigos matados para ir incrementando la dificultad del juego
 
 	// Elementos de interfaz
+	Pad* pad;
 	Actor* buttonJump;
 	Actor* buttonShoot;
 
