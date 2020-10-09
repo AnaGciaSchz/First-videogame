@@ -57,6 +57,9 @@ void GameLayer::processControls() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) { //como no es un puntero, pasamos referencia
 		// Cambio automático de input
+		if (event.type == SDL_QUIT) {
+			game->loopActive = false;
+		}
 		if (event.type == SDL_KEYDOWN) {
 			game->input = game->inputKeyboard;
 		}
@@ -103,9 +106,6 @@ void GameLayer::processControls() {
 //levanta para cambiar valores y que no parezca que
 //está siempre pulsada
 void GameLayer::keysToControls(SDL_Event event) {
-	if (event.type == SDL_QUIT) {
-		game->loopActive = false;
-	}
 	if (event.type == SDL_KEYDOWN) {
 		int code = event.key.keysym.sym;
 		// Pulsada
