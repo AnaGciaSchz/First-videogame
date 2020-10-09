@@ -28,6 +28,7 @@ public:
 	void loadMapObject(char character, float x, float y);
 	void calculateScroll();
 	float scrollX;
+	Tile* cup; // Elemento de final de nivel
 
 	int mapWidth;
 	list<Tile*> tiles;
