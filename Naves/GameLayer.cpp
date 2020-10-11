@@ -16,7 +16,7 @@ void GameLayer::init() {
 	textPoints->content = to_string(points);
 
 	players[0] = new Player("res/jugador.png",50, 50,50,57,30, 3, game);
-	players[1] =new Player("res/jugador2.png",50, 50,50,57,10, 4, game);
+	players[1] =new Player("res/jugador2.png",50, 50,50,57,10, 5, game);
 
 	player = players[0]; // new = se crea en el heap y no se borra
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
