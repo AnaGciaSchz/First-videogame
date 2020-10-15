@@ -51,6 +51,10 @@ public:
 	Pad* pad;
 	Actor* buttonJump;
 	Actor* buttonShoot;
+	Actor* message;
+	bool pause;
+	bool controlContinue = false;
+
 
 	list<Enemy*> enemies; //lista enlazada, arraylist sería vector, array es un array con cosillas
 	list<Projectile*> projectiles;

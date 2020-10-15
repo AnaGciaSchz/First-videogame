@@ -1,6 +1,9 @@
 #include "GameLayer.h"
 
 GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
+	pause = true;
+	message = new Actor("res/mensaje_como_jugar.png", WIDTH * 0.5, HEIGHT * 0.5,
+		WIDTH, HEIGHT, game);
 	init();
 }
 
@@ -75,6 +78,10 @@ void GameLayer::processControls() {
 		}
 	}
 	//procesar controles
+	if (controlContinue) {
+		pause = false;
+		controlContinue = false;
+	}
 	// Disparar
 	if (controlShoot) {
 		Projectile* newProjectile = player->shoot();
@@ -107,6 +114,7 @@ void GameLayer::processControls() {
 //está siempre pulsada
 void GameLayer::keysToControls(SDL_Event event) {
 	if (event.type == SDL_KEYDOWN) {
+		controlContinue = true;
 		int code = event.key.keysym.sym;
 		// Pulsada
 		switch (code) {
@@ -168,6 +176,9 @@ void GameLayer::keysToControls(SDL_Event event) {
 }
 
 void GameLayer::update() {
+	if (pause) {
+		return;
+	}
 
 	// Nivel superado
 	if (cup->isOverlap(player)) {
@@ -356,6 +367,7 @@ void GameLayer::mouseToControls(SDL_Event event) {
 	float motionY = event.motion.y / game->scaleLower;
 	// Cada vez que hacen click
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
+			controlContinue = true;
 		if (pad->containsPoint(motionX, motionY)) {
 			pad->clicked = true;
 			// CLICK TAMBIEN TE MUEVE
@@ -435,6 +447,9 @@ void GameLayer::draw() {
 		buttonShoot->draw(); // NO TIENEN SCROLL, POSICION FIJA
 	}
 
+	if (pause) {
+		message->draw();
+	}
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
