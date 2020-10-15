@@ -20,6 +20,8 @@ public:
 	int fileWidth; //tamaño imagen
 	int fileHeight; //tamaño imagen
 	bool collisionDown;
+	bool outRight;
+	bool outLeft;
 	Game* game;
 
 	bool containsPoint(int pointX, int pointY); // contiene punto
