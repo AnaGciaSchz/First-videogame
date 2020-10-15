@@ -208,6 +208,7 @@ void GameLayer::update() {
 	for (auto const& enemy : enemies) {
 		for (auto const& projectile : projectiles) {
 			if (enemy->isOverlap(projectile)) { //Si le da un proyectil o se sale de la pantalla
+				cout << "enemy overlap";
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
 					projectile) != deleteProjectiles.end(); //comprobar si el proyectil ya estaba en la lista
@@ -231,26 +232,16 @@ void GameLayer::update() {
 				}
 
 			}
-
-			if (projectile->x - projectile->width / 2 >= WIDTH) { //si el proyectil se sale de la pantalla
-				bool pInList = std::find(deleteProjectiles.begin(),
-					deleteProjectiles.end(),
-					projectile) != deleteProjectiles.end(); //comprobar si el proyectil ya estaba en la lista
-
-				if (!pInList) {
-					deleteProjectiles.push_back(projectile);
-				}
-			}
 		}
 	}
 
 
 		for (auto const& projectile : projectiles) {
-			if (projectile->isInRender(scrollX) == false || projectile->vx == 0) {
+			if (projectile->isInRender(scrollX) == false || projectile->vx == 0) { //si el proyectil se sale de la pantalla o se para
 
 				bool pInList = std::find(deleteProjectiles.begin(),
 					deleteProjectiles.end(),
-					projectile) != deleteProjectiles.end();
+					projectile) != deleteProjectiles.end(); //comprobar si el proyectil ya estaba en la lista
 
 				if (!pInList) {
 					deleteProjectiles.push_back(projectile);

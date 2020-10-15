@@ -83,7 +83,7 @@ void Space::updateMoveRight(Actor* dynamicAct) {
         dynamicAct->x = dynamicAct->x + possibleMovement;
         // Restringir la velocidad actual (opcional)
         dynamicAct->vx = possibleMovement;
-        cout << dynamicAct->vx;
+       // cout << dynamicAct->vx;
     }
 }
 

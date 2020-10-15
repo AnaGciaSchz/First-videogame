@@ -54,7 +54,6 @@ bool Actor::isInRender(float scrollX) {
 		return true;
 	}
 	return false;
-
 }
 
 
