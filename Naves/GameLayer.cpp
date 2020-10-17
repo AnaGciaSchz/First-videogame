@@ -378,7 +378,7 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		space->addStaticActor(tile);
 		break;
 	}
-	case 'G': {
+	case 'A': {
 		savePoint = new SavePoint(x, y, game);
 		// modificación para empezar a contar desde el suelo.
 		savePoint->y = savePoint->y - savePoint->height / 2;
