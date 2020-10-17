@@ -4,6 +4,7 @@ GameLayer::GameLayer(Game* game): Layer(game){ //llamamos al super
 	pause = true;
 	message = new Actor("res/mensaje_como_jugar.png", WIDTH * 0.5, HEIGHT * 0.5,
 		WIDTH, HEIGHT, game);
+	saved = false;
 	init();
 }
 
@@ -189,8 +190,17 @@ void GameLayer::update() {
 		message = new Actor("res/mensaje_ganar.png", WIDTH * 0.5, HEIGHT * 0.5,
 			WIDTH, HEIGHT, game);
 		pause = true;
+		saved = false;
+		savePoint = nullptr;
 		init();
 	}
+
+	// PuntoDeGuardado
+		if (!saved && savePoint != nullptr && savePoint->isOverlap(player)) {
+			saved = true;
+			xSaved = savePoint->x;
+			ySaved = savePoint->y;
+		}
 
 	// Jugador se cae
 	if (player->y > HEIGHT + 80) {
@@ -295,7 +305,7 @@ void GameLayer::update() {
 		projectile->update();
 	}
 
-	std::cout << "update GameLayer" << std::endl;
+	//std::cout << "update GameLayer" << std::endl;
 }
 
 
@@ -316,15 +326,21 @@ void GameLayer::loadMap(string name) {
 			// Por carácter (en cada línea)
 			for (int j = 0; !streamLine.eof(); j++) {
 				streamLine >> character; // Leer character
-				cout << character;
+				//cout << character;
 				float x = 40 / 2 + j * 40; // x central
 				float y = 32 + i * 32; // y suelo
 				loadMapObject(character, x, y);
 			}
-			cout << character << endl;
+			//cout << character << endl;
 		}
 	}
 	streamFile.close();
+	if (saved) {
+		player = new Player(xSaved, ySaved, game);
+		// modificación para empezar a contar desde el suelo.
+		player->y = player->y - player->height / 2;
+		space->addDynamicActor(player);
+	}
 }
 
 void GameLayer::loadMapObject(char character, float x, float y)
@@ -346,11 +362,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		break;
 	}
 	case '1': {
-		player = new Player(x, y, game);
-		// modificación para empezar a contar desde el suelo.
-		player->y = player->y - player->height / 2;
-		space->addDynamicActor(player);
-		break;
+		if (!saved) {
+			player = new Player(x, y, game);
+			// modificación para empezar a contar desde el suelo.
+			player->y = player->y - player->height / 2;
+			space->addDynamicActor(player);
+			break;
+		}
 	}
 	case '#': {
 		Tile* tile = new Tile("res/bloque_tierra.png", x, y, game);
@@ -358,6 +376,13 @@ void GameLayer::loadMapObject(char character, float x, float y)
 		tile->y = tile->y - tile->height / 2;
 		tiles.push_back(tile);
 		space->addStaticActor(tile);
+		break;
+	}
+	case 'G': {
+		savePoint = new SavePoint(x, y, game);
+		// modificación para empezar a contar desde el suelo.
+		savePoint->y = savePoint->y - savePoint->height / 2;
+		space->addDynamicActor(savePoint);
 		break;
 	}
 	}
@@ -435,6 +460,9 @@ void GameLayer::draw() {
 		projectile->draw(scrollX);
 	}
 	cup->draw(scrollX);
+	if (!saved && savePoint!=nullptr) {
+		savePoint->draw(scrollX);
+	}
 	player->draw(scrollX);
 
 	for (auto const& enemy : enemies) {

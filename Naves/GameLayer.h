@@ -9,6 +9,7 @@
 #include "Tile.h"
 #include "Space.h"
 #include "Pad.h"
+#include "SavePoint.h"
 
 #include <list>
 #include <fstream>
@@ -54,6 +55,11 @@ public:
 	Actor* message;
 	bool pause;
 	bool controlContinue = false;
+
+	float xSaved;
+	float ySaved;
+	bool saved;
+	SavePoint* savePoint = nullptr;
 
 
 	list<Enemy*> enemies; //lista enlazada, arraylist sería vector, array es un array con cosillas
